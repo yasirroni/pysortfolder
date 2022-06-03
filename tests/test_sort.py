@@ -9,3 +9,7 @@ class TestSort:
 
     def test_sort_folders_and_files(self):
         print(SortFoldersAndFiles(dir_path="tests/data", reverse=True).sort_by_size)
+
+    def test_check_current_folder_size(self):
+        sf = SortFolders(dir_path="tests/data")
+        sf.dir_size
