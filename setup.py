@@ -6,14 +6,15 @@ PACKAGE_NAME = 'sortfolder'
 DESCRIPTION = "Sort folder by size"
 AUTHOR = "Muhammad Yasirroni",
 EMAIL = "muhammadyasirroni@gmail.com",
-URL = "https://github.com/UGM-EPSLab/MATPOWER-Case-Frames",
+URL = "https://github.com/yasirroni/sortfolder",
 KEYWORDS = ['sort', 'folder', 'size']
 
 with open("README.md", "r") as f:
     long_description = f.read()
 
 current_path = os.path.abspath(os.path.dirname(__file__))
-version_line = open(os.path.join(current_path, PACKAGE_NAME, 'version.py'), "rt").read()
+with open(os.path.join(current_path, PACKAGE_NAME, 'version.py'), "rt") as f:
+    version_line = f.read()
 
 m = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", version_line, re.M)
 __version__ = m.group(1)
