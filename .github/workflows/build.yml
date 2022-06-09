@@ -1,0 +1,44 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  linters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.7
+          cache: 'pip'
+      - name: isort
+        uses: jamescurtin/isort-action@master
+      - name: flake8
+        uses: py-actions/flake8@v1
+
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install package
+        run: |
+          pip install -e "."
+
+      - name: Install pytest and pytest-cov
+        run: |
+          pip install pytest pytest-cov
+
+      - name: Run tests
+        run: |
+          pytest -c pyproject.toml --cov-report term --cov=pysortfolder tests/
