@@ -25,6 +25,7 @@ class MetaSortFolders:
                 total_size += os.path.getsize(f)
         return total_size
 
+
 class SortFolders(MetaSortFolders):
     def sort_by_size(self, reverse=False):
         dirlist = os.listdir(self.dir_path)
@@ -32,8 +33,10 @@ class SortFolders(MetaSortFolders):
         for e in dirlist:
             filepath = os.path.join(self.dir_path, e)
             if os.path.isdir(filepath):
-                folders.append({"foldername":e, "filepath":filepath, "size":self._dir_size(filepath)})
-        folders.sort(key=lambda foldername: foldername['size'], reverse=reverse)
+                folders.append({"foldername": e, "filepath": filepath,
+                                "size": self._dir_size(filepath)})
+        folders.sort(
+            key=lambda foldername: foldername['size'], reverse=reverse)
         return folders
 
 
@@ -45,9 +48,12 @@ class SortFoldersAndFiles(MetaSortFolders):
         for e in dirlist:
             filepath = os.path.join(self.dir_path, e)
             if os.path.isdir(filepath):
-                folders.append({"foldername":e, "filepath":filepath, "size":self._dir_size(filepath)})
+                folders.append({"foldername": e, "filepath": filepath,
+                                "size": self._dir_size(filepath)})
             else:
-                files.append({"filename":e, "filepath":filepath, "size":os.path.getsize(filepath)})
-        folders.sort(key=lambda foldername: foldername['size'], reverse=reverse)
+                files.append({"filename": e, "filepath": filepath,
+                             "size": os.path.getsize(filepath)})
+        folders.sort(
+            key=lambda foldername: foldername['size'], reverse=reverse)
         files.sort(key=lambda filename: filename['size'], reverse=reverse)
         return folders, files
