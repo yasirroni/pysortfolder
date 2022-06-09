@@ -1,10 +1,10 @@
-import sortfolder
-from sortfolder import SortFolders, SortFoldersAndFiles
+import pysortfolder
+from pysortfolder import SortFolders, SortFoldersAndFiles
 
 
 class TestSort:
     """Test using pytest
-    pytest --lf -rA -c pyproject.toml --cov-report term --cov=sortfolder tests/
+    pytest --lf -rA -c pyproject.toml --cov-report term --cov=pysortfolder tests/
     """
 
     def test_sort_folders(self):
@@ -20,8 +20,8 @@ class TestSort:
     def test_check_current_folder_size(self):
         sf = SortFolders(dir_path="tests/data")
         print(sf.dir_size())
-        assert sf.dir_size() == 77
+        assert sf.dir_size() == 82
         assert isinstance(sf.dir_size(), int)
 
     def test_version(self):
-        assert isinstance(sortfolder.__version__, str)
+        assert isinstance(pysortfolder.__version__, str)

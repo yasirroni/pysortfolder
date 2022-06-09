@@ -3,11 +3,11 @@ import re
 
 from setuptools import find_packages, setup
 
-PACKAGE_NAME = 'sortfolder'
+PACKAGE_NAME = 'pysortfolder'
 DESCRIPTION = "Sort folder by size"
 AUTHOR = "Muhammad Yasirroni",
 EMAIL = "muhammadyasirroni@gmail.com",
-URL = "https://github.com/yasirroni/sortfolder",
+URL = "https://github.com/yasirroni/pysortfolder",
 KEYWORDS = ['sort', 'folder', 'size']
 
 with open("README.md", "r") as f:

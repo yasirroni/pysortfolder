@@ -33,7 +33,7 @@ addopts = [
 source = ["tests"]
 
 [coverage.paths]
-source = "sortfolder"
+source = "pysortfolder"
 
 [coverage.run]
 branch = true
