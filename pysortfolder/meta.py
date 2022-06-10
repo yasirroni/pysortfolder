@@ -1,59 +1,85 @@
 import os
 
 
-class MetaSortFolders:
-    def __init__(self, dir_path):
-        self.dir_path = dir_path
+class PySortFolder:
+    def __init__(self, path):
+        self.path = path
+        # TODO: check if path is folder
+        self._tree = None
+        # self._root = None
 
-    def dir_size(self):
-        return self._dir_size(path=self.dir_path)
+    # def print_root()
+    #     pass
 
-    @staticmethod
-    def _dir_size(path=None):
-        """Get size in bytes
+    # def get_root(self, reverse=False):
+    #     self._root = None
+    #     return self._root
+
+    def print_tree(self, reverse=False):
+        import json
+
+        if self._tree is None:
+            self.get_tree(reverse=reverse)
+        print(json.dumps(self._tree, sort_keys=False, indent=4))
+
+    def get_tree(self, reverse=False):
+        """Sort folders and files by size in tree like dict
+
+        # folder = {
+        #     'name':,
+        #     'path':,
+        #     'size':,
+        #     'childrens':
+        # }
+
+        # files = {
+        #     'name':,
+        #     'path':,
+        #     'size':,
+        #     'childrens':
+        # }
 
         Args:
-            path (str): path in str compatible by os.path()
+            reverse (bool, optional):
+                Descend if True, ascend if false. Defaults to False.
 
         Returns:
-            int: size in bytes
+            dict: Folder tree in dict
         """
-        total_size = 0
-        for dirpath, _, filenames in os.walk(path):
-            for i in filenames:
-                f = os.path.join(dirpath, i)
-                total_size += os.path.getsize(f)
-        return total_size
+        dirpaths_buffer = {}
+        for dirpath, dirs, files in os.walk(self.path, topdown=False):
+            folder_node = {
+                'name': os.path.basename(dirpath),
+                'path': dirpath,
+                'size': 0,
+                'childrens': [dirpaths_buffer[os.path.join(dirpath, dir)]
+                              for dir in dirs]
+            }
 
+            # ?: should we delete the key in dirpaths_buffer dict after the pick?
 
-class SortFolders(MetaSortFolders):
-    def sort_by_size(self, reverse=False):
-        dirlist = os.listdir(self.dir_path)
-        folders = []
-        for e in dirlist:
-            filepath = os.path.join(self.dir_path, e)
-            if os.path.isdir(filepath):
-                folders.append({"foldername": e, "filepath": filepath,
-                                "size": self._dir_size(filepath)})
-        folders.sort(
-            key=lambda foldername: foldername['size'], reverse=reverse)
-        return folders
+            folder_node['childrens'].sort(
+                key=lambda x: x['size'], reverse=reverse
+            )
 
+            file_node = []
+            for file_name in files:
+                file_path = os.path.join(dirpath, file_name)
 
-class SortFoldersAndFiles(MetaSortFolders):
-    def sort_by_size(self, reverse=False):
-        dirlist = os.listdir(self.dir_path)
-        folders = []
-        files = []
-        for e in dirlist:
-            filepath = os.path.join(self.dir_path, e)
-            if os.path.isdir(filepath):
-                folders.append({"foldername": e, "filepath": filepath,
-                                "size": self._dir_size(filepath)})
-            else:
-                files.append({"filename": e, "filepath": filepath,
-                             "size": os.path.getsize(filepath)})
-        folders.sort(
-            key=lambda foldername: foldername['size'], reverse=reverse)
-        files.sort(key=lambda filename: filename['size'], reverse=reverse)
-        return folders, files
+                file_node.append({
+                    'name': file_name,
+                    'path': file_path,
+                    'size': os.path.getsize(file_path),
+                })
+
+            file_node.sort(
+                key=lambda x: x['size'], reverse=reverse
+            )
+
+            folder_node['childrens'].extend(file_node)
+            folder_node['size'] = sum(i['size'] for i in folder_node['childrens'])
+
+            dirpaths_buffer[dirpath] = folder_node
+
+        self._tree = folder_node
+        return self._tree

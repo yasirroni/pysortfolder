@@ -1,5 +1,7 @@
 import pysortfolder
-from pysortfolder import SortFolders, SortFoldersAndFiles
+from pysortfolder import PySortFolder, dir_size
+
+path = "tests/data"
 
 
 class TestSort:
@@ -7,23 +9,21 @@ class TestSort:
     pytest --lf -rA -c pyproject.toml --cov-report term --cov=pysortfolder tests/
     """
 
-    def test_sort_folders(self):
-        sf = SortFolders(dir_path="tests/data")
-        print(sf.sort_by_size())
-        print(SortFolders(dir_path="tests/data").sort_by_size())
+    def test_get_tree(self):
+        sf = PySortFolder(path=path)
+        tree = sf.get_tree()
+        assert isinstance(sf._tree, dict)
+        assert isinstance(tree, dict)
 
-    def test_sort_folders_and_files(self):
-        sf = SortFoldersAndFiles(dir_path="tests/data")
-        print(sf.sort_by_size())
-        print(SortFoldersAndFiles(dir_path="tests/data").sort_by_size())
+    def test_print_tree(self):
+        PySortFolder(path=path).print_tree()
 
     def test_check_current_folder_size(self):
-        sf = SortFolders(dir_path="tests/data")
-        print(sf.dir_size())
+        size = dir_size(path=path)
         # TODO: os based size
-        # assert sf.dir_size() == 82 # ubuntu
-        # assert sf.dir_size() == 87 # ubuntu
-        assert isinstance(sf.dir_size(), int)
+        # assert size == 82 # ubuntu
+        # assert size == 87 # ubuntu
+        assert isinstance(size, int)
 
     def test_version(self):
         assert isinstance(pysortfolder.__version__, str)

@@ -2,24 +2,14 @@
 
 ## Usage
 
-Checking current root size in bytes
-
 ```python
-from pysortfolder import SortFolders
+from pysortfolder import PySortFolder
 
-sf = SortFolders(dir_path="PATH/TO/ROOT/FOLDER")
-sf.dir_size()
+PySortFolder(path='PATH/TO/ROOT/FOLDER').print_tree() # print the tree
 ```
 
-Sort all folder in root by size in bytes
-
 ```python
-from pysortfolder import SortFolders
+from pysortfolder import dir_size
 
-sf = SortFolders(dir_path="PATH/TO/ROOT/FOLDER")
-print(sf.sort_by_size())
+print(dir_size(path='PATH/TO/ROOT/FOLDER')) # print the size of the root
 ```
-
-## Akcnowledgement
-
-Source: https://pytutorial.com/python-sort-folders-by-size
