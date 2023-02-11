@@ -142,13 +142,15 @@ def print_tree(tree_dict, prefix='', level=999, only_directories=False,
     """
     if print_current:
         print(tree_dict['name'] + f", size: {tree_dict['size']}")
+
     try:
         if only_directories:
             childs = [i for i in tree_dict['childrens'] if 'childrens' in i]
         else:
             childs = tree_dict['childrens']
+
         pointers = [TEE] * (len(childs) - 1) + [LAST]
-        for i, (pointer, child) in enumerate(zip(pointers, childs)):
+        for pointer, child in zip(pointers, childs):
             if 'childrens' in child:
                 if level > 0:
                     yield (prefix
@@ -156,12 +158,14 @@ def print_tree(tree_dict, prefix='', level=999, only_directories=False,
                            + child['name']
                            + f", size: {child['size']}"
                            )
+
                 if level > 1:
                     if pointer == TEE:
                         extension = BRANCH
                     else:
                         extension = SPACE
-                    yield from print_tree(child, prefix=prefix + extension,
+                    yield from print_tree(child,
+                                          prefix=prefix + extension,
                                           level=level - 1,
                                           only_directories=only_directories,
                                           print_current=False)

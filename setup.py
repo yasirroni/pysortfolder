@@ -3,7 +3,6 @@ import re
 
 from setuptools import setup
 
-
 PACKAGE_NAME = "pysortfolder"
 
 current_path = os.path.abspath(os.path.dirname(__file__))
