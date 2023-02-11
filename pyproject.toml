@@ -56,6 +56,7 @@ select = [
 ]
 ignore = [
     "B90",  # support <3.10
+    "C901",  # temporarily ignore `print_tree` is too complex
 ]
 
 [tool.pytest.ini_options]
