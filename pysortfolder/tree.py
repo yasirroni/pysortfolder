@@ -73,10 +73,11 @@ class PySortFolder:
         self._tree = folder_node
 
     def print_tree(self, prefix='', level=100, only_directories=False,
-                   print_current=True):
+                   print_current=True, unit='byte'):
         for line in print_tree(self._tree, prefix=prefix, level=level,
                                only_directories=only_directories,
-                               print_current=print_current):
+                               print_current=print_current,
+                               unit=unit):
             print(line)
 
     @property
@@ -85,7 +86,7 @@ class PySortFolder:
 
 
 def print_tree(tree_dict, prefix='', level=999, only_directories=False,
-               print_current=True):
+               print_current=True, unit='byte'):
     """
     Prints a tree-like structure of the given tree_dict.
     The tree_dict should be a dictionary with the following format:
@@ -117,6 +118,9 @@ def print_tree(tree_dict, prefix='', level=999, only_directories=False,
         print_current (bool, optional):
             If set to True, the current level of the tree will be printed.
             Defaults to True.
+        unit (str, optional):
+            Choose between byte, kB, MB, or GB.
+            Defaults to byte.
 
     Yields:
         str: A string with the tree structure.
@@ -140,8 +144,18 @@ def print_tree(tree_dict, prefix='', level=999, only_directories=False,
 
     Reference: https://stackoverflow.com/a/59109706/11671779
     """
+    units = {
+        'byte': 1,
+        'kB': 1024,
+        'MB': 1048576,
+        'GB': 1073741824,
+    }
+
+    denominator = units[unit]
+    precision = 0 if unit == 'byte' else 2
+
     if print_current:
-        print(tree_dict['name'] + f", size: {tree_dict['size']}")
+        print(tree_dict['name'] + f", size: {tree_dict['size']/denominator:.{precision}f} {unit}")
 
     try:
         if only_directories:
@@ -156,7 +170,7 @@ def print_tree(tree_dict, prefix='', level=999, only_directories=False,
                     yield (prefix
                            + pointer
                            + child['name']
-                           + f", size: {child['size']}"
+                           + f", size: {child['size']/denominator:.{precision}f} {unit}"
                            )
 
                 if level > 1:
@@ -168,12 +182,13 @@ def print_tree(tree_dict, prefix='', level=999, only_directories=False,
                                           prefix=prefix + extension,
                                           level=level - 1,
                                           only_directories=only_directories,
-                                          print_current=False)
+                                          print_current=False,
+                                          unit=unit)
             elif not only_directories:
                 yield (prefix
                        + pointer
                        + child['name']
-                       + f", size: {child['size']}"
+                       + f", size: {child['size']/denominator:.{precision}f} {unit}"
                        )
     except KeyError:
         pass
